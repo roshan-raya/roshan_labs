@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Roshan Rayamajhi — Labs</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="header">
+    <div class="header__inner">
+      <div class="brand">
+        <div class="brand__name">Roshan Rayamajhi</div>
+        <div class="brand__tag">Cybersecurity demos & labs</div>
+      </div>
+      <button class="theme-btn" id="themeBtn" type="button" aria-label="Toggle dark or light theme">
+        Theme
+      </button>
+    </div>
+  </header>
+
+  <main class="main">
+    <p class="intro">A growing collection of interactive cybersecurity demos.</p>
+
+    <section class="grid" aria-label="Projects">
+      <a class="card" href="./projects/sql-injection-simulator/" aria-label="Open SQL Injection Simulator">
+        <div class="card__title">SQL Injection Simulator</div>
+        <div class="card__desc">Safe demo: vulnerable vs secure login, OWASP Injection, and how to fix it.</div>
+        <div class="card__meta">
+          <span class="pill">AppSec</span>
+          <span class="pill">Web</span>
+        </div>
+      </a>
+
+      <div class="card card--soon" aria-label="Coming soon">
+        <div class="card__title">Packet Flow Visualizer</div>
+        <div class="card__desc">Normal vs suspicious traffic patterns. (Coming soon)</div>
+        <div class="card__meta">
+          <span class="pill">Blue Team</span>
+          <span class="pill">Visualization</span>
+        </div>
+      </div>
+
+      <div class="card card--soon" aria-label="Coming soon">
+        <div class="card__title">Password Strength Lab</div>
+        <div class="card__desc">Entropy, brute-force estimates, and best practices. (Coming soon)</div>
+        <div class="card__meta">
+          <span class="pill">Crypto</span>
+          <span class="pill">Web</span>
+        </div>
+      </div>
+    </section>
+
+    <footer class="footer">
+      <a href="mailto:your-email@gmail.com">Contact</a>
+    </footer>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>

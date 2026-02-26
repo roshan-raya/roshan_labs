@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SQL Injection Simulator — Safe Demo</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="header">
+    <h1 class="header__title">SQL Injection Simulator</h1>
+    <span class="badge" aria-label="OWASP category">OWASP Top 10 — Injection</span>
+  </header>
+
+  <main class="main">
+    <div class="tabs" role="tablist" aria-label="Main navigation">
+      <button type="button" class="tabs__btn tabs__btn--active" role="tab" id="tab-simulator" aria-selected="true" aria-controls="panel-simulator" tabindex="0">Simulator</button>
+      <button type="button" class="tabs__btn" role="tab" id="tab-fix" aria-selected="false" aria-controls="panel-fix" tabindex="-1">How to Fix</button>
+    </div>
+
+    <div class="tab-panels">
+      <!-- Tab 1: Simulator -->
+      <section id="panel-simulator" class="tab-panel tab-panel--active" role="tabpanel" aria-labelledby="tab-simulator">
+        <div class="card">
+          <h2 class="card__title">Login simulation</h2>
+
+          <div class="mode-toggle">
+            <span class="mode-toggle__label">Mode:</span>
+            <div class="segmented" role="group" aria-label="Simulation mode">
+              <button type="button" class="segmented__opt segmented__opt--active" data-mode="vulnerable" aria-pressed="true">Vulnerable</button>
+              <button type="button" class="segmented__opt" data-mode="secure" aria-pressed="false">Secure</button>
+            </div>
+            <span class="mode-toggle__hint" id="mode-hint">String concatenation — injection possible</span>
+          </div>
+
+          <form class="login-form" id="login-form" novalidate>
+            <label class="login-form__label" for="username">Username</label>
+            <input type="text" id="username" class="login-form__input" name="username" autocomplete="username" placeholder="e.g. admin">
+            <label class="login-form__label" for="password">Password</label>
+            <input type="password" id="password" class="login-form__input" name="password" autocomplete="current-password" placeholder="e.g. admin123">
+            <button type="submit" class="btn btn--primary">Login</button>
+          </form>
+          <p class="helper">Educational simulation only — no real database.</p>
+
+          <div class="payload-chips">
+            <span class="payload-chips__label">Try these payloads (education only):</span>
+            <div class="payload-chips__list">
+              <button type="button" class="chip" data-payload="' OR '1'='1" data-field="password">' OR '1'='1</button>
+              <button type="button" class="chip" data-payload="admin' --" data-field="username">admin' --</button>
+              <button type="button" class="chip" data-payload="' OR 1=1 --" data-field="password">' OR 1=1 --</button>
+            </div>
+          </div>
+
+          <div class="query-preview card card--nested">
+            <h3 class="query-preview__title">Query preview</h3>
+            <div class="query-preview__code" id="query-preview" aria-live="polite">
+              <code id="query-preview-content">SELECT * FROM users WHERE username = '' AND password = '';</code>
+            </div>
+          </div>
+
+          <div class="vuln-explanation card card--nested">
+            <h3 class="vuln-explanation__title">Vulnerability explanation</h3>
+            <div class="vuln-explanation__body" id="vuln-explanation" aria-live="polite">
+              <p>Enter credentials or use an example payload. In <strong>Vulnerable</strong> mode, injection-like input can change the query logic.</p>
+            </div>
+          </div>
+
+          <div class="result-panel card card--nested" id="result-panel" aria-live="polite" aria-atomic="true" hidden>
+            <div class="result-panel__status" id="result-status"></div>
+            <p class="result-panel__message" id="result-message"></p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Tab 2: How to Fix -->
+      <section id="panel-fix" class="tab-panel" role="tabpanel" aria-labelledby="tab-fix" hidden>
+        <div class="card">
+          <h2 class="card__title">Preventing SQL injection</h2>
+          <ul class="fix-list">
+            <li>Never concatenate user input into SQL strings.</li>
+            <li>Use parameterized queries / prepared statements so the database treats input as data, not code.</li>
+            <li>Validate and sanitize input; use least-privilege database accounts.</li>
+            <li>Consider a WAF and security logging for detection.</li>
+          </ul>
+
+          <h3 class="fix-section__title">Python — parameterized query</h3>
+          <div class="code-block-wrap">
+            <button type="button" class="code-block__copy" data-target="snippet-python" aria-label="Copy Python snippet">Copy</button>
+            <pre class="code-block" id="snippet-python"><code>import sqlite3
+
+conn = sqlite3.connect('app.db')
+cursor = conn.cursor()
+
+# Safe: placeholders, then pass values separately
+username = request.form.get('username')
+password = request.form.get('password')
+cursor.execute(
+    "SELECT * FROM users WHERE username = ? AND password = ?",
+    (username, password)
+)
+row = cursor.fetchone()</code></pre>
+          </div>
+
+          <h3 class="fix-section__title">Node.js — parameterized query</h3>
+          <div class="code-block-wrap">
+            <button type="button" class="code-block__copy" data-target="snippet-node" aria-label="Copy Node.js snippet">Copy</button>
+            <pre class="code-block" id="snippet-node"><code>const mysql = require('mysql2/promise');
+
+const [rows] = await connection.execute(
+  'SELECT * FROM users WHERE username = ? AND password = ?',
+  [username, password]
+);</code></pre>
+          </div>
+
+          <div class="owasp-note">
+            <strong>OWASP Top 10: Injection</strong> — Injection flaws occur when untrusted data is sent to an interpreter as part of a command or query. Use parameterized queries and allowlists to prevent injection.
+          </div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <footer class="footer">
+    Built for learning • Safe simulation
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
